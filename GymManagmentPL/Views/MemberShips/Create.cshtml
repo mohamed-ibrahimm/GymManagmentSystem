@@ -1,0 +1,86 @@
+﻿@using GymManagmentBLL.ViewModels.MembershipIndexViewModel
+@model CreateMembershipViewModel
+
+<div id="Alert" class="alert alert-danger alert-dismissible fade show" style="display:none">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    @ViewBag.Error
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h4>New Membership</h4>
+                </div>
+
+                <div class="card-body">
+
+                    <form asp-action="Create" method="post">
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <!-- Member -->
+                        <div class="mb-3">
+                            <label class="form-label">Member</label>
+
+                            <select asp-for="MemberId"
+                                    asp-items="Model.Members"
+                                    class="form-select">
+                                <option value="">-- Select Member --</option>
+                            </select>
+
+                            <span asp-validation-for="MemberId" class="text-danger"></span>
+                        </div>
+
+                        <!-- Plan -->
+                        <div class="mb-3">
+                            <label class="form-label">Plan</label>
+
+                            <select asp-for="PlaneId"
+                                    asp-items="Model.Plans"
+                                    class="form-select">
+                                <option value="">-- Select Plan --</option>
+                            </select>
+
+                            <span asp-validation-for="PlaneId" class="text-danger"></span>
+                        </div>
+
+                        <!-- End Date -->
+                        <div class="mb-3">
+                            <label class="form-label">End Date</label>
+                            <input asp-for="EndDate" type="date" class="form-control" />
+                            <span asp-validation-for="EndDate" class="text-danger"></span>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-primary">
+                                Create Membership
+                            </button>
+
+                            <a asp-action="Index" class="btn btn-secondary ms-2">
+                                Cancel
+                            </a>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const alertBox = document.getElementById("Alert");
+        if (alertBox && alertBox.innerText.trim() !== "") {
+            alertBox.style.display = "block";
+            setTimeout(() => alertBox.remove(), 2000);
+        }
+    });
+</script>

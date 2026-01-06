@@ -1,0 +1,48 @@
+﻿@model GymManagmentBLL.ViewModels.MembershipIndexViewModel.CreateMembershipViewModel
+
+@{
+    ViewData["Title"] = "Edit Membership";
+}
+
+<h1>Edit Membership</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group mb-3">
+                <label asp-for="MemberId" class="control-label">Member</label>
+                <select asp-for="MemberId" class="form-control" asp-items="Model.Members">
+                    <option value="">-- Select Member --</option>
+                </select>
+                <span asp-validation-for="MemberId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="PlaneId" class="control-label">Plan</label>
+                <select asp-for="PlaneId" class="form-control" asp-items="Model.Plans">
+                    <option value="">-- Select Plan --</option>
+                </select>
+                <span asp-validation-for="PlaneId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="EndDate" class="control-label">End Date</label>
+                <input asp-for="EndDate" class="form-control" type="date" />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Save Changes" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

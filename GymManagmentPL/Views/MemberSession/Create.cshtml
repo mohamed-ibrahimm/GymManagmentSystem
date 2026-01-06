@@ -1,0 +1,108 @@
+﻿@using GymManagmentBLL.Service.Interfaces
+@inject ISessionService _sessionService
+@inject IMemberService _memberService
+@model GymManagmentBLL.ViewModels.MemberSessionIndexViewModel.CreateMemberSessionViewModel
+
+@{
+    ViewData["Title"] = "New Booking";
+    List<SelectListItem> safeSessionList = new List<SelectListItem>();
+    List<SelectListItem> safeMemberList = new List<SelectListItem>();
+    string errorMessage = "";
+
+    try
+    {
+  
+        if (_sessionService != null)
+        {
+            var sessions = _sessionService.GetAllSessions();
+            if (sessions != null)
+            {
+                foreach (var s in sessions)
+                {
+                    if (s != null)
+                    {
+
+                        string sessionText = $"#{s.Id} | {s.StartDate.ToString("yyyy-MM-dd hh:mm tt")}";
+
+                        safeSessionList.Add(new SelectListItem
+                        {
+                            Value = s.Id.ToString(),
+                            Text = sessionText
+                        });
+                    }
+                }
+            }
+        }
+
+        // 2. تحميل الأعضاء
+        if (_memberService != null)
+        {
+            var members = _memberService.GetAllMember();
+            if (members != null)
+            {
+                safeMemberList = members
+                    .Where(m => m != null)
+                    .Select(m => new SelectListItem { Value = m.Id.ToString(), Text = m.Name ?? "No Name" })
+                    .ToList();
+            }
+        }
+    }
+    catch (Exception ex)
+    {
+        errorMessage = ex.Message;
+    }
+}
+
+<h1>New Booking Form</h1>
+<hr />
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+
+<div class="row justify-content-center align-items-center h-100">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <form asp-action="Create" method="post">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Session</label>
+                        <select asp-for="SessionId" asp-items="safeSessionList" class="form-select">
+                            <option value="">-- Select Session --</option>
+                        </select>
+                        <span asp-validation-for="SessionId" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Member</label>
+                        <select asp-for="MemberId" asp-items="safeMemberList" class="form-select" id="MemberId">
+                            <option value="">-- Select Member --</option>
+                        </select>
+                        <span asp-validation-for="MemberId" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3 d-flex justify-content-between">
+                        <a asp-action="Index" class="btn btn-secondary">Back</a>
+                        <button type="submit" class="btn btn-primary">Save Booking</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            if (jQuery().select2) {
+                $('#MemberId').select2({ placeholder: "-- Select Member --", allowClear: true, width: '100%' });
+            }
+        });
+    </script>
+}
